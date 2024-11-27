@@ -1,5 +1,4 @@
-#include "header.h"
-
+#include "read_data_from_serial_port.h"
 int main(int argc,char **argv) 
 {
 	if(argc!=2)
@@ -23,8 +22,8 @@ int main(int argc,char **argv)
 		close(serial_port);
 		return 0;
 	}
-	cfsetospeed(&tty, B9600);
-	cfsetispeed(&tty, B9600);
+	cfsetospeed(&tty, B115200);
+	cfsetispeed(&tty, B115200);
 	tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;
 	tty.c_cflag |= (CLOCAL | CREAD);
 	tty.c_cflag &= ~(PARENB | PARODD);
@@ -49,17 +48,12 @@ int main(int argc,char **argv)
 	{ 
 		if (character_count=read(serial_port,&output_buffer,sizeof(output_buffer))==-1) 
 		{
-			perror("Error writing to serial port");
+			perror("Error reading to serial port");
 			printf("errorno[%d] is strerr(%s)\n",errno,strerror(errno));
 			return 0;
 		}
-
+		
 		printf("%s",output_buffer);
-		if(character_count<0) 
-		{
-			perror("Error reading from serial port");
-			printf("errorno[%d] is strerr(%s)\n",errno,strerror(errno));
-		}
 	}
 	close(serial_port);
 }
